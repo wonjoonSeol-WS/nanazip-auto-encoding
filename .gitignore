@@ -1,0 +1,10 @@
+*.dll
+*.exe
+*.obj
+*.lib
+*.exp
+*.pdb
+*.zip
+dist/
+.vs/
+__pycache__/
