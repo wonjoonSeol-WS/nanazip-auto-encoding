@@ -82,6 +82,8 @@ def calls(path, count):
 backup = read_settings()
 try:
     with tempfile.TemporaryDirectory(prefix="nanazip-shell-") as d:
+        # The shell hands the DLL long paths; TEMP can be an 8.3 short path (GitHub's runners)
+        d = os.path.realpath(d)
         stand_in = os.path.join(d, "stand-in.ps1")
         open(stand_in, "w", encoding="utf-8").write(STAND_IN)
         target = os.path.join(d, "target")
