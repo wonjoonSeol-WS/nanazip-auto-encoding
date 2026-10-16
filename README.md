@@ -26,7 +26,7 @@ NanaZip's extractors decode them correctly when given the code page, for example
 
   <img src="docs/images/drag-menu.png" width="400" alt="Right-drag menu with the two items above the Windows copy and move items">
 
-- **Optional blue `.zip` icon:** a "NanaZip (blue icon)" entry in Open with. Pick it once as the default app and `.zip` files open in NanaZip and show NanaZip's blue app icon instead of its white page icon.
+- **Optional blue archive icon:** a "NanaZip (blue icon)" app for all 62 archive and disk image types NanaZip opens (zip, 7z, rar, tar, gz, iso, vhdx and more). Pick it as the default app for a type, and files of that type open in NanaZip and show NanaZip's blue app icon instead of its white page icon.
 
   <img src="docs/images/file-icon.png" width="440" alt="NanaZip's white .zip file icon next to the blue NanaZip icon">
 
@@ -50,7 +50,7 @@ The screenshots come from Korean Windows (the system's own items are in Korean) 
    powershell -ExecutionPolicy Bypass -File Install-NanaZipAutoCP.ps1
    ```
    A message box reports the result. The menu language follows the Windows display language; add `-Language en` or `-Language ko` to choose.
-4. Optional, for the blue icon: right-click any `.zip` file and choose **Open with > Choose another app > NanaZip (blue icon)**, then **Always**. Windows lets only you pick the default app.
+4. Optional, for the blue icon: open **Settings > Apps > Default apps > NanaZip (blue icon)** and pick it under each type you want. Or right-click an archive and choose **Open with > Choose another app > NanaZip (blue icon)**, then **Always**. Windows lets only you pick default apps, one type at a time.
 
 On the Windows 11 compact context menu, the right-click items are under **Show more options**.
 
@@ -60,7 +60,7 @@ To uninstall, run this in PowerShell:
 powershell -ExecutionPolicy Bypass -File "$env:LOCALAPPDATA\NanaZipAutoCP\Install-NanaZipAutoCP.ps1" -Uninstall
 ```
 
-In Command Prompt, write `%LOCALAPPDATA%` instead of `$env:LOCALAPPDATA`. If Explorer still has the menu DLL loaded, the folder is deleted at your next sign-in. If you picked "NanaZip (blue icon)" as the default app for `.zip`, pick another one afterwards.
+In Command Prompt, write `%LOCALAPPDATA%` instead of `$env:LOCALAPPDATA`. If Explorer still has the menu DLL loaded, the folder is deleted at your next sign-in. If you picked "NanaZip (blue icon)" as the default app for some types, pick another one for them afterwards.
 
 ## How the encoding is detected
 

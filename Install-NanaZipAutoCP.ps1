@@ -7,7 +7,8 @@ Copies Expand-ArchiveAuto.ps1 and NanaZipAutoCP.dll to %LOCALAPPDATA%\NanaZipAut
 in HKCU only (no admin rights):
   - two right-click items for .zip files and two right-drag items for archives:
     Extract Here (Smart) and Extract to Folder, both picking the ZIP file name encoding
-  - "NanaZip (blue icon)" in Open with, which opens .zip files in NanaZip and shows NanaZip's app icon
+  - a "NanaZip (blue icon)" app for every archive type NanaZip opens, listed in Open with and in
+    Settings > Default apps, which opens the files in NanaZip and shows NanaZip's app icon
 Requires 64-bit Windows on x64 and NanaZip (Microsoft Store or "winget install M2Team.NanaZip").
 
 .EXAMPLE
@@ -38,23 +39,29 @@ $HandlerKeys = @{
     "$Classes\Folder\shellex\DragDropHandlers\NanaZipAutoCP"                        = $DragClsid
 }
 $ArchiveExtensions = '.zip;.7z;.rar;.tar;.gz;.tgz;.bz2;.tbz;.tbz2;.xz;.txz;.zst;.lzh;.lha;.cab;.iso;.wim;.arj;.lzma;.001'
-$ZipProgId = 'NanaZipAutoCP.zip'
-$OpenWithKey = 'Software\Classes\.zip\OpenWithProgids'
+# Every type NanaZip opens (the file associations in its AppxManifest.xml); each gets the blue icon
+# ProgId NanaZipAutoCP<extension>
+$IconExtensions = ('.001;.7z;.apfs;.arj;.asar;.b64;.br;.bz2;.bzip2;.cab;.cb7;.cbr;.cbz;.cpio;.deb;.dmg;.esd;.fat;.gz;.gzip;' +
+    '.hfs;.hfsx;.iso;.lha;.liz;.lz;.lz4;.lz5;.lzh;.lzma;.lzma2;.ntfs;.nupkg;.rar;.rpm;.squashfs;.swm;.tar;.taz;.tbz;' +
+    '.tbz2;.tgz;.tlz;.tlz4;.tlz5;.tpz;.txz;.tz;.tzst;.tzstd;.vdi;.vhd;.vhdx;.vmdk;.wim;.xar;.xz;.z;.zip;.zipx;.zst;.zstd') -split ';'
+$RegisteredAppsKey = 'Software\RegisteredApplications'
 $RunOnceKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\RunOnce'
 $Text = @{
     en = @{
         Smart = 'Extract Here (Smart) with NanaZip (auto encoding)'
         Folder = 'Extract to Folder with NanaZip (auto encoding)'
         App = 'NanaZip (blue icon)'
-        Type = 'ZIP archive'
-        Done = "Installed. Right-click a .zip file or right-drag archives onto a folder.`n`nFor the blue .zip icon: right-click a .zip file > Open with > Choose another app > NanaZip (blue icon) > Always."
+        AppDescription = "Opens archives in NanaZip and shows NanaZip's blue app icon"
+        Type = '{0} archive'
+        Done = "Installed. Right-click a .zip file or right-drag archives onto a folder.`n`nFor the blue icon: Settings > Apps > Default apps > NanaZip (blue icon), then pick it under each type you want. Or right-click an archive > Open with > Choose another app > NanaZip (blue icon) > Always."
     }
     ko = @{
         Smart = 'NanaZip으로 여기에 압축 풀기 (스마트, 인코딩 자동)'
         Folder = 'NanaZip으로 폴더에 압축 풀기 (인코딩 자동)'
         App = 'NanaZip (파란 아이콘)'
-        Type = 'ZIP 압축 파일'
-        Done = "설치했습니다. .zip 파일을 우클릭하거나 압축 파일을 폴더로 오른쪽 드래그하세요.`n`n파란 .zip 아이콘: .zip 파일 우클릭 > 연결 프로그램 > 다른 앱 선택 > NanaZip (파란 아이콘) > 항상"
+        AppDescription = '압축 파일을 NanaZip으로 열고 NanaZip의 파란 앱 아이콘으로 보여 줍니다'
+        Type = '{0} 압축 파일'
+        Done = "설치했습니다. .zip 파일을 우클릭하거나 압축 파일을 폴더로 오른쪽 드래그하세요.`n`n파란 아이콘: 설정 > 앱 > 기본 앱 > NanaZip (파란 아이콘)에서 원하는 형식마다 고르세요. 압축 파일 우클릭 > 연결 프로그램 > 다른 앱 선택 > NanaZip (파란 아이콘) > 항상으로 골라도 됩니다."
     }
 }
 
@@ -149,11 +156,24 @@ function Remove-Registration {
     # Static verbs written by earlier versions of this installer
     $oldVerbs = 'NanaZipAutoCP', 'NanaZipShiftJIS', 'NanaZipAuto1Here', 'NanaZipAuto1Smart', 'NanaZipAuto2Folder', 'NanaZipAuto3ShiftJIS' |
         ForEach-Object { "$Classes\SystemFileAssociations\.zip\shell\$_" }
-    $keys = @($HandlerKeys.Keys) + $oldVerbs + "$Classes\CLSID\$DragClsid" + "$Classes\CLSID\$ContextMenuClsid" + $SettingsKey + "$Classes\$ZipProgId"
+    $progIds = @($IconExtensions | ForEach-Object { "$Classes\NanaZipAutoCP$_" })
+    $keys = @($HandlerKeys.Keys) + $oldVerbs + "$Classes\CLSID\$DragClsid" + "$Classes\CLSID\$ContextMenuClsid" + $SettingsKey + $progIds
     foreach ($k in $keys) { if (Test-Path -LiteralPath $k) { Remove-Item -LiteralPath $k -Recurse } }
-    # Only our value: other apps list themselves under the same key
-    $openWith = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey($OpenWithKey, $true)
-    if ($openWith) { $openWith.DeleteValue($ZipProgId, $false); $openWith.Dispose() }
+    foreach ($ext in $IconExtensions) { Remove-UserValue "Software\Classes\$ext\OpenWithProgids" "NanaZipAutoCP$ext" }
+    Remove-UserValue $RegisteredAppsKey 'NanaZipAutoCP'
+}
+
+# Keeps the key's other values, which matters where other apps list themselves too (New-Item -Force
+# would wipe them), and creates a Classes key in milliseconds where New-Item takes half a second
+function Set-UserValue([string]$SubKey, [string]$Name, [string]$Value) {
+    $key = [Microsoft.Win32.Registry]::CurrentUser.CreateSubKey($SubKey)
+    $key.SetValue($Name, $Value)
+    $key.Dispose()
+}
+
+function Remove-UserValue([string]$SubKey, [string]$Name) {
+    $key = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey($SubKey, $true)
+    if ($key) { $key.DeleteValue($Name, $false); $key.Dispose() }
 }
 
 function Copy-Payload([string]$Name) {
@@ -186,7 +206,7 @@ try {
                 Set-ItemProperty -LiteralPath $RunOnceKey -Name 'NanaZipAutoCPCleanup' -Value "cmd.exe /c rmdir /s /q `"$InstallDir`""
             }
         }
-        Show-Result 'Removed the NanaZip auto encoding menu items and the "NanaZip (blue icon)" .zip type. If you picked it as the default app for .zip files, pick another one.'
+        Show-Result 'Removed the NanaZip auto encoding menu items and the "NanaZip (blue icon)" app. If you picked it as the default app for some types, pick another one for them.'
         return
     }
 
@@ -240,23 +260,27 @@ try {
         Set-ItemProperty -LiteralPath $k -Name '(default)' -Value $HandlerKeys[$k]
     }
 
-    $progKey = "$Classes\$ZipProgId"
-    New-Item -Path "$progKey\shell\open\command" -Force | Out-Null
-    New-Item -Path "$progKey\Application" -Force | Out-Null
-    Set-ItemProperty -LiteralPath $progKey -Name '(default)' -Value $t.Type
-    Set-ItemProperty -LiteralPath "$progKey\Application" -Name ApplicationName -Value $t.App
-    if ($icon) {
-        New-Item -Path "$progKey\DefaultIcon" -Force | Out-Null
-        Set-ItemProperty -LiteralPath "$progKey\DefaultIcon" -Name '(default)' -Value $icon
-        Set-ItemProperty -LiteralPath "$progKey\Application" -Name ApplicationIcon -Value $icon
-    }
     # -open, as NanaZip registers itself, so NanaZip's "Extract on open" setting applies
     $nanazip = Join-Path $env:LOCALAPPDATA 'Microsoft\WindowsApps\NanaZip.exe'
-    Set-ItemProperty -LiteralPath "$progKey\shell\open\command" -Name '(default)' -Value "`"$nanazip`" `"%1`" -open"
-    # CreateSubKey keeps the values other apps put there; New-Item -Force would wipe them
-    $openWith = [Microsoft.Win32.Registry]::CurrentUser.CreateSubKey($OpenWithKey)
-    $openWith.SetValue($ZipProgId, '')
-    $openWith.Dispose()
+    # Settings > Apps > Default apps lists the app with all its types on one page
+    $capabilities = 'Software\NanaZipAutoCP\Capabilities'
+    Set-UserValue $capabilities ApplicationName $t.App
+    Set-UserValue $capabilities ApplicationDescription $t.AppDescription
+    if ($icon) { Set-UserValue $capabilities ApplicationIcon $icon }
+    foreach ($ext in $IconExtensions) {
+        $progId = "NanaZipAutoCP$ext"
+        $progKey = "Software\Classes\$progId"
+        Set-UserValue $progKey '' ($t.Type -f $ext.TrimStart('.').ToUpperInvariant())
+        Set-UserValue "$progKey\Application" ApplicationName $t.App
+        if ($icon) {
+            Set-UserValue "$progKey\DefaultIcon" '' $icon
+            Set-UserValue "$progKey\Application" ApplicationIcon $icon
+        }
+        Set-UserValue "$progKey\shell\open\command" '' "`"$nanazip`" `"%1`" -open"
+        Set-UserValue "Software\Classes\$ext\OpenWithProgids" $progId ''
+        Set-UserValue "$capabilities\FileAssociations" $ext $progId
+    }
+    Set-UserValue $RegisteredAppsKey 'NanaZipAutoCP' $capabilities
     Update-ShellAssociations
     Show-Result $t.Done
 }

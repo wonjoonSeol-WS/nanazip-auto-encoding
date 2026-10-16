@@ -1,6 +1,6 @@
 # Drives NanaZipAutoCP.dll through tests\test_drag.exe with a stand-in for Expand-ArchiveAuto.ps1
-# that records how it was called. Needs src\build.cmd to have run. Replaces HKCU\Software\NanaZipAutoCP
-# while it runs and restores it afterwards.
+# that records how it was called. Needs src\build.cmd to have run. Replaces the values of
+# HKCU\Software\NanaZipAutoCP while it runs and restores them afterwards.
 # usage: python -I tests/shell_test.py
 import json, os, subprocess, sys, tempfile, time, winreg
 
@@ -34,14 +34,18 @@ def read_settings():
         return None
 
 
+# Values only: the installer keeps its Capabilities subkey under the same key
 def write_settings(values):
-    try:
-        winreg.DeleteKey(winreg.HKEY_CURRENT_USER, KEY)
-    except FileNotFoundError:
-        pass
     if values is None:
+        try:
+            winreg.DeleteKey(winreg.HKEY_CURRENT_USER, KEY)
+        except FileNotFoundError:
+            pass
         return
+    old = read_settings() or {}
     with winreg.CreateKey(winreg.HKEY_CURRENT_USER, KEY) as k:
+        for name in old.keys() - values.keys():
+            winreg.DeleteValue(k, name)
         for name, (value, kind) in values.items():
             winreg.SetValueEx(k, name, 0, kind, value)
 

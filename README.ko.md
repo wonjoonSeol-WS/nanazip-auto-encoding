@@ -26,7 +26,7 @@ NanaZip의 압축 해제기는 문자 코드를 알려 주면 제대로 풉니�
 
   <img src="docs/images/drag-menu.png" width="400" alt="오른쪽 드래그 메뉴에서 Windows 복사, 이동 항목 위에 추가된 두 항목">
 
-- **선택: 파란 `.zip` 아이콘:** 연결 프로그램 목록의 "NanaZip (파란 아이콘)" 항목입니다. 기본 앱으로 한 번 고르면 `.zip` 파일이 NanaZip으로 열리고, NanaZip의 흰 문서 아이콘 대신 파란 앱 아이콘으로 보입니다.
+- **선택: 파란 압축 파일 아이콘:** NanaZip이 여는 압축 파일과 디스크 이미지 62개 형식(zip, 7z, rar, tar, gz, iso, vhdx 등)에 "NanaZip (파란 아이콘)" 앱을 등록합니다. 어떤 형식의 기본 앱으로 고르면 그 형식의 파일은 NanaZip으로 열리고, NanaZip의 흰 문서 아이콘 대신 파란 앱 아이콘으로 보입니다.
 
   <img src="docs/images/file-icon.png" width="440" alt="NanaZip의 흰 .zip 파일 아이콘과 파란 NanaZip 아이콘">
 
@@ -50,7 +50,7 @@ NanaZip의 압축 해제기는 문자 코드를 알려 주면 제대로 풉니�
    powershell -ExecutionPolicy Bypass -File Install-NanaZipAutoCP.ps1
    ```
    결과는 메시지 창으로 알려 줍니다. 메뉴 언어는 Windows 표시 언어를 따르며, 직접 고르려면 `-Language ko` 또는 `-Language en`을 붙입니다.
-4. 선택, 파란 아이콘: 아무 `.zip` 파일이나 우클릭해서 **연결 프로그램 > 다른 앱 선택**에서 **NanaZip (파란 아이콘)** 항목을 고르고 **항상**을 누릅니다. Windows는 기본 앱을 사용자가 직접 고르게만 허용합니다.
+4. 선택, 파란 아이콘: **설정 > 앱 > 기본 앱 > NanaZip (파란 아이콘)**에서 원하는 형식마다 이 앱을 고릅니다. 압축 파일을 우클릭해서 **연결 프로그램 > 다른 앱 선택**에서 **NanaZip (파란 아이콘)** 항목을 고르고 **항상**을 눌러도 됩니다. Windows는 기본 앱을 사용자가 형식마다 직접 고르게만 허용합니다.
 
 Windows 11의 간단한 우클릭 메뉴에서는 **추가 옵션 표시** 안에 항목이 있습니다.
 
@@ -60,7 +60,7 @@ Windows 11의 간단한 우클릭 메뉴에서는 **추가 옵션 표시** 안�
 powershell -ExecutionPolicy Bypass -File "$env:LOCALAPPDATA\NanaZipAutoCP\Install-NanaZipAutoCP.ps1" -Uninstall
 ```
 
-명령 프롬프트에서는 `$env:LOCALAPPDATA` 대신 `%LOCALAPPDATA%`를 씁니다. 탐색기가 메뉴 DLL을 아직 불러 둔 상태라면, 설치 폴더는 다음 로그인 때 지워집니다. "NanaZip (파란 아이콘)"을 `.zip` 기본 앱으로 골랐다면 제거 후 다른 앱을 골라 주세요.
+명령 프롬프트에서는 `$env:LOCALAPPDATA` 대신 `%LOCALAPPDATA%`를 씁니다. 탐색기가 메뉴 DLL을 아직 불러 둔 상태라면, 설치 폴더는 다음 로그인 때 지워집니다. "NanaZip (파란 아이콘)"을 기본 앱으로 고른 형식이 있다면 제거 후 그 형식에 다른 앱을 골라 주세요.
 
 ## 인코딩 판별 방식
 
