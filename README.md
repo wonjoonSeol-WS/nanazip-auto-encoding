@@ -119,3 +119,7 @@ The GitHub Actions workflow builds the DLL and runs the detection tests and the 
 MIT, see [LICENSE](LICENSE). Not affiliated with NanaZip or M2Team.
 
 The NanaZip logo and file icon seen in the screenshots were designed by Shomnipotence for the NanaZip project and are licensed under [CC BY-ND 4.0](https://creativecommons.org/licenses/by-nd/4.0/) ([NanaZip License](https://github.com/M2Team/NanaZip/blob/main/License.md)). This repository does not include the icon: the installer reads it from the NanaZip installed on your PC.
+
+## Try my other projects
+
+Like this? I make other small open source tools too: Android apps, a Claude chat game, Claude add-ons and more. See them all at [wonjoonseol-ws.github.io](https://wonjoonseol-ws.github.io/?from=nanazip-auto-encoding).

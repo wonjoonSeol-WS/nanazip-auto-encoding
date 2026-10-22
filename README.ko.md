@@ -119,3 +119,7 @@ GitHub Actions 워크플로가 push할 때마다 DLL을 빌드하고 판별 테�
 MIT, [LICENSE](LICENSE)를 참고하세요. NanaZip 및 M2Team과 관련 없는 비공식 프로젝트입니다.
 
 스크린샷에 보이는 NanaZip 로고와 파일 아이콘은 Shomnipotence가 NanaZip 프로젝트를 위해 디자인했으며 [CC BY-ND 4.0](https://creativecommons.org/licenses/by-nd/4.0/) 라이선스입니다([NanaZip License](https://github.com/M2Team/NanaZip/blob/main/License.md)). 이 저장소에는 아이콘이 들어 있지 않으며, 설치 스크립트가 PC에 설치된 NanaZip에서 읽어 옵니다.
+
+## 다른 프로젝트도 써 보세요
+
+마음에 드셨다면 제가 만든 다른 오픈소스도 둘러보세요. 안드로이드 앱, Claude 채팅 게임, Claude 애드온 등이 있어요: [wonjoonseol-ws.github.io](https://wonjoonseol-ws.github.io/ko/?from=nanazip-auto-encoding)
