@@ -122,4 +122,4 @@ MIT, [LICENSE](LICENSE)를 참고하세요. NanaZip 및 M2Team과 관련 없는 
 
 ## 다른 프로젝트도 써 보세요
 
-마음에 드셨다면 제가 만든 다른 오픈소스도 둘러보세요. 안드로이드 앱, Claude 채팅 게임, Claude 애드온 등이 있어요: [wonjoonseol-ws.github.io](https://wonjoonseol-ws.github.io/ko/?from=nanazip-auto-encoding)
+마음에 드셨다면 제가 만든 다른 오픈소스도 둘러보세요. 안드로이드 앱, Claude 채팅 게임, Claude 애드온 등이 있어요: [wonjoonseol.github.io](https://wonjoonseol.github.io/ko/?from=nanazip-auto-encoding)

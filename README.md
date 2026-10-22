@@ -122,4 +122,4 @@ The NanaZip logo and file icon seen in the screenshots were designed by Shomnipo
 
 ## Try my other projects
 
-Like this? I make other small open source tools too: Android apps, a Claude chat game, Claude add-ons and more. See them all at [wonjoonseol-ws.github.io](https://wonjoonseol-ws.github.io/?from=nanazip-auto-encoding).
+Like this? I make other small open source tools too: Android apps, a Claude chat game, Claude add-ons and more. See them all at [wonjoonseol.github.io](https://wonjoonseol.github.io/?from=nanazip-auto-encoding).
